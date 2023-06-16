@@ -5,7 +5,6 @@ Epibooks is an online bookstore application built with React.js and Bootstrap. I
 ## Features
 - Browse through a vast collection of books
 - View book details, including title and price
-- Add books to the cart for easy checkout
 - Responsive design for seamless user experience across devices
 
 ## Technologies Used
