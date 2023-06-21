@@ -1,14 +1,15 @@
-import React from 'react';
-import { Jumbotron, Container } from 'react-bootstrap';
+import React from "react";
+import { Jumbotron, Container } from "react-bootstrap";
 
 function Welcome() {
   return (
     <Jumbotron fluid className="bg-light text-dark">
       <Container>
-        <h1 className="display-4">Benvenuti nel nostro shop online!</h1>
+        <h1 className="display-4">Welcome to our online shop!</h1>
         <p className="lead">
-          Esplora la nostra vasta collezione di libri e trova le letture che ti appassionano. Scopri
-          nuove storie, nuovi interessi e nuove esperienze.
+          Explore our wide collection of books and find the readings that ignite
+          your passion. Discover new stories, new interests, and new
+          experiences.
         </p>
       </Container>
     </Jumbotron>

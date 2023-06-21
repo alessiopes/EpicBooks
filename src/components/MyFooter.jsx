@@ -2,7 +2,7 @@ import React from "react";
 
 function MyFooter() {
   return (
-    <footer className="footer bg-dark text-light fixed-bottom pt-3">
+    <footer className="footer bg-dark text-light pt-3">
       <div className="container text-center">
         <p>
           Epibooks - Ecommerce di libri
