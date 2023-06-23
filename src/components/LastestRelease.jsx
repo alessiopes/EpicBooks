@@ -8,7 +8,7 @@ import TotalResults from "./TotalResults";
 function LastestRelease() {
   const [books, setBooks] = useState(booksData); // Stato per i dati dei libri
   const [searchText, setSearchText] = useState(""); // Stato per il testo di ricerca
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Stato per la quantità di elementi per pagina
+  const [itemsPerPage, setItemsPerPage] = useState(12); // Stato per la quantità di elementi per pagina
   const [lastVisibleIndex, setLastVisibleIndex] = useState(itemsPerPage);
 
   // Gestore dell'evento di cambio del testo di ricerca

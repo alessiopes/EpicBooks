@@ -12,7 +12,7 @@ const ItemsPerPageSelector = ({ quantity, onChange }) => {
         {quantity} items per page
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        {[10, 20, 30, 50, 100].map((item) => (
+        {[12, 24, 48, 96].map((item) => (
           <Dropdown.Item key={item} onClick={() => handleItemClick(item)}>
             {item}
           </Dropdown.Item>
