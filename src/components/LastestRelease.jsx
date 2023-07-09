@@ -1,71 +1,73 @@
-import React, { useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import React, { useState, useEffect, useContext } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { ThemeContext } from "../context/ThemeProvider";
 import booksData from "../data/fantasy.json";
-import SingleBook from "./SingleBook";
+import BookList from "./BookList";
 import ItemsPerPageSelector from "./ItemsPerPageSelector";
 import TotalResults from "./TotalResults";
+import CommentArea from "./CommentArea";
 
 function LastestRelease() {
-  const [books, setBooks] = useState(booksData); // Stato per i dati dei libri
-  const [searchText, setSearchText] = useState(""); // Stato per il testo di ricerca
-  const [itemsPerPage, setItemsPerPage] = useState(12); // Stato per la quantità di elementi per pagina
-  const [lastVisibleIndex, setLastVisibleIndex] = useState(itemsPerPage);
+  const [books] = useState(booksData);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedBookReviews, setSelectedBookReviews] = useState([]);
+  const { theme } = useContext(ThemeContext);
 
-  // Gestore dell'evento di cambio del testo di ricerca
-  const handleSearch = (event) => {
-    setSearchText(event.target.value);
-  };
-
-  // Gestore dell'evento di cambio della quantitá degli elementi per pagina
   const handleItemsPerPageChange = (quantity) => {
     setItemsPerPage(quantity);
-    setLastVisibleIndex(quantity);
   };
 
-  // Filtra i libri in base al testo di ricerca
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const handleBookSelect = (asin) => {
+    setSelectedBook(asin);
+  };
 
-  // Mostra i risultati nella quantitá scelta in itemsPerPage
-  const paginatedBooks = filteredBooks.slice(0, itemsPerPage);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(
+          `https://striveschool-api.herokuapp.com/api/comments/${selectedBook}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDdlNDc0ZWI5YzBmNzAwMTQ0ODRlZWIiLCJpYXQiOjE2ODg5MjkzMTAsImV4cCI6MTY5MDEzODkxMH0.EgfD1nX5SOBgBBiRDDXFmcRTeJEWPS0khFG4ByKyMxA",
+            },
+          }
+        );
+        const data = await response.json();
+        setSelectedBookReviews(data);
+      } catch (error) {
+        console.error("Error retrieving reviews:", error);
+      }
+    };
+
+    if (selectedBook) {
+      fetchReviews();
+    }
+  }, [selectedBook]);
+
+  const paginatedBooks = books.slice(0, itemsPerPage);
 
   return (
-    <Container className="mt-4">
+    <Container className={`mt-4 ${theme === "dark" ? "bg-dark text-light" : ""}`}>
       <h2>Lastest Releases</h2>
-      <div className="input-group mb-4 mt-2">
-        <input
-          type="text"
-          className="form-control"
-          id="search-bar"
-          placeholder="Search for a book..."
-          value={searchText}
-          onChange={handleSearch}
-        />
-        <div className="input-group-append">
-          <button className="btn btn-primary" type="button">
-            Search
-          </button>
-        </div>
-      </div>
-      <div className="mb-4">
-        <TotalResults
-          total={filteredBooks.length}
-          shown={paginatedBooks.length}
-        />
+      <div className={`mb-4 ${theme === "dark" ? "text-light" : ""}`}>
+        <TotalResults total={books.length} shown={paginatedBooks.length} />
         <div className="flex-grow-1">
-          <ItemsPerPageSelector
-            quantity={itemsPerPage}
-            onChange={handleItemsPerPageChange}
-          />
+          <ItemsPerPageSelector quantity={itemsPerPage} onChange={handleItemsPerPageChange} />
         </div>
       </div>
-      <Row xs={1} sm={2} md={3} lg={4}>
-        {paginatedBooks.map((book) => (
-          <Col key={book.asin} className="mb-4 col-6">
-            <SingleBook book={book} />
-          </Col>
-        ))}
+      <Row>
+        <Col>
+          <BookList
+            books={paginatedBooks}
+            selectedBook={selectedBook}
+            onBookSelect={handleBookSelect}
+          />
+        </Col>
+        <Col>
+          <CommentArea bookAsin={selectedBook} reviews={selectedBookReviews} />
+        </Col>
       </Row>
     </Container>
   );

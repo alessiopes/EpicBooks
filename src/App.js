@@ -1,18 +1,34 @@
-import React from 'react';
-import MyNav from './components/MyNav';
+import React, { useState, useContext } from 'react';
+import MyNavbar from './components/MyNavbar';
 import MyFooter from './components/MyFooter';
 import Welcome from './components/Welcome';
 import LastestRelease from './components/LastestRelease';
+import { ThemeProvider, ThemeContext } from './context/ThemeProvider';
+import './App.css';
 
-function App() {
+
+const App = () => {
+  const [query, setQuery] = useState('');
+  const { theme } = useContext(ThemeContext);
+
+  const updateQuery = (value) => {
+    setQuery(value);
+  };
+
   return (
-    <div className="App">
-      <MyNav />
+    <div className={`App ${theme === 'dark' ? 'dark' : ''}`}>
+      <MyNavbar query={query} updateQuery={updateQuery} />
       <Welcome />
-      <LastestRelease />
+      <LastestRelease searchQuery={query} />
       <MyFooter />
     </div>
   );
 }
 
-export default App;
+const ThemedApp = () => (
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
+);
+
+export default ThemedApp;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import Dropdown from "react-bootstrap/Dropdown";
 
-const AddComment = () => {
+const AddComment = ({ bookAsin, updateReviews }) => {
   const [commentText, setCommentText] = useState("");
   const [rating, setRating] = useState("");
 
@@ -14,22 +14,35 @@ const AddComment = () => {
     e.preventDefault();
 
     try {
-      //! Terminare la chiamata POST alle API per inviare la recensione
-      const response = await fetch("/* URL */", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          comment: commentText,
-          rating: rating,
-        }),
-      });
+      const requestData = {
+        comment: commentText,
+        rate: rating,
+        elementId: bookAsin,
+      };
+  
+      console.log("Dati inviati:", requestData);
+
+      const response = await fetch(
+        "https://striveschool-api.herokuapp.com/api/comments/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDdlNDc0ZWI5YzBmNzAwMTQ0ODRlZWIiLCJpYXQiOjE2ODg5MjkzMTAsImV4cCI6MTY5MDEzODkxMH0.EgfD1nX5SOBgBBiRDDXFmcRTeJEWPS0khFG4ByKyMxA",
+          },
+          body: JSON.stringify({
+            comment: commentText,
+            rate: rating,
+            elementId: bookAsin,
+          }),
+        }
+      );
 
       if (response.ok) {
         console.log("Recensione inviata con successo");
         setCommentText("");
         setRating("");
+        updateReviews(); // Chiamata alla funzione fetchReviews di CommentArea aggiornare i commenti
       } else {
         console.error(
           "Errore durante l'invio della recensione:",

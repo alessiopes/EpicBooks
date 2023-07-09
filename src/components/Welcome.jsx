@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Jumbotron, Container } from "react-bootstrap";
+import { ThemeContext } from "../context/ThemeProvider";
 
 function Welcome() {
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <Jumbotron fluid className="bg-light text-dark">
+    <Jumbotron fluid className={`bg-${theme === "dark" ? "dark" : "light"} text-${theme === "dark" ? "light" : "dark"}`}>
       <Container>
         <h1 className="display-4">Welcome to our online shop!</h1>
         <p className="lead">
